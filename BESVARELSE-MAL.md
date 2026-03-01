@@ -707,19 +707,38 @@ PostgreSQL bruker som standard B+-tre fordi de er fleksible og fungerer godt for
 
 **Foreslått datastruktur:**
 
-[Skriv ditt svar her - f.eks. heap-fil, LSM-tree, eller annen egnet datastruktur]
+En append-only heap-fil, eventuelt implementert som en log-structured merge-tree (LSM-tree) dersom systemet skal skaleres og håndtere svært store datamengder.
 
 **Begrunnelse:**
 
+Logging kjennetegnes av at:
+Det skrives svært mange nye hendelser.
+Data endres sjelden (man oppdaterer ikke gamle loggoppføringer).
+Lesing skjer sjeldnere enn skriving.
+Derfor passer en datastruktur optimalisert for sekvensielle innsettinger best.
+
 **Skrive-operasjoner:**
 
-[Skriv ditt svar her - forklar hvorfor datastrukturen er egnet for mange skrive-operasjoner]
+En append-only heap-fil er svært effektiv for skriving fordi:
+Nye loggoppføringer legges bare til på slutten av filen.
+Ingen behov for sortering eller reorganisering.
+Sekvensielle disk-skrivinger er raske.
+Lav kompleksitet (O(1) for innsetting).
+En LSM-tree er også godt egnet fordi:
+Den skriver først til minne (memtable).
+Data flushes sekvensielt til disk.
+Den unngår kostbare tilfeldige diskoperasjoner.
+Begge strukturene er optimalisert for høy skrivehastighet.
 
 **Lese-operasjoner:**
 
-[Skriv ditt svar her - forklar hvordan datastrukturen håndterer sjeldne lese-operasjoner]
-
----
+Loggdata leses vanligvis:
+Sekvensielt (f.eks. ved revisjon eller feilsøking).
+Innenfor et tidsintervall.
+Sjelden som punktoppslag.
+En heap-fil fungerer godt for sekvensielle gjennomganger, siden data allerede ligger i innsettingsrekkefølge.
+Dersom man trenger raskere søk på spesifikke felt (f.eks. bruker-ID eller tidspunkt), kan man legge til indekser på toppen av heap-filen.
+I en LSM-tree håndteres lesing gjennom sammenslåing (merge) av flere nivåer, noe som kan være tregere enn B+-tre for rene leseintensive systemer, men er akseptabelt for loggsystemer der skriving dominerer. 
 
 ### Oppgave 4.4: Validering i flerlags-systemer
 
