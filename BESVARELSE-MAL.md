@@ -340,7 +340,26 @@ erDiagram
 
 **Fremmednøkler:**
 
-[Skriv ditt svar her - list opp alle fremmednøklene og forklar hvordan de implementerer forholdene]
+lås.stasjon_id → stasjon.stasjon_id
+Implementerer Stasjon 1 → * Lås.
+Hver lås peker til nøyaktig én stasjon.
+sykkel.stasjon_id → stasjon.stasjon_id (NULL mulig)
+Implementerer Stasjon 1 → * Sykkel (parkert).
+Når sykkelen er utleid settes stasjon_id til NULL (i tråd med hintet).
+sykkel.lås_id → lås.lås_id (NULL mulig)
+Implementerer forholdet mellom sykkel og lås (plass i stativ).
+NULL når sykkelen er utleid.
+utleie.kunde_id → kunde.kunde_id
+Implementerer Kunde 1 → * Utleie.
+utleie.sykkel_id → sykkel.sykkel_id
+Implementerer Sykkel 1 → * Utleie.
+utleie.start_stasjon_id → stasjon.stasjon_id
+Implementerer Stasjon 1 → * Utleie (start).
+utleie.slutt_stasjon_id → stasjon.stasjon_id (NULL mulig)
+Implementerer Stasjon 1 → * Utleie (slutt).
+NULL mulig mens utleien er aktiv.
+
+For å sikre at en lås ikke kan ha flere sykler samtidig, bør sykkel.lås_id være UNIQUE (for ikke-null verdier). Dette er ikke en fremmednøkkel, men en nødvendig constraint for å håndheve kardinaliteten (0/1 sykkel per lås).
 
 **Oppdatert ER-diagram:**
 
