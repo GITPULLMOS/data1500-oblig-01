@@ -336,7 +336,32 @@ erDiagram
 
 **Identifiserte forhold og kardinalitet:**
 
-[Skriv ditt svar her - list opp alle forholdene mellom entitetene og angi kardinalitet]
+Identifiserte forhold og kardinalitet:
+
+Stasjon – Lås
+Forhold: En stasjon har mange låser, og hver lås tilhører nøyaktig én stasjon.
+Kardinalitet: 1–til–mange (Stasjon 1 → * Lås)
+Stasjon – Sykkel (parkering/tilgjengelighet)
+Forhold: En stasjon kan ha mange sykler parkert, og en sykkel kan være parkert på maks én stasjon om gangen (eller være utleid).
+Kardinalitet: 1–til–mange (Stasjon 1 → * Sykkel), men med mulighet for NULL på sykkel for “utleid”.
+Lås – Sykkel (låsing)
+Forhold: En lås kan holde maks én sykkel om gangen (fysisk plass), og en sykkel kan være i maks én lås om gangen (eller være utleid).
+Kardinalitet: I praksis 1–til–0/1 i begge retninger (en lås har 0 eller 1 sykkel; en sykkel er i 0 eller 1 lås).
+Implementeres som en FK fra sykkel til lås + en unikhetsregel på sykkel.lås_id (for å sikre at samme lås ikke kan ha flere sykler samtidig).
+Kunde – Utleie
+Forhold: En kunde kan ha mange utleier over tid, men hver utleie tilhører nøyaktig én kunde.
+Kardinalitet: 1–til–mange (Kunde 1 → * Utleie)
+Sykkel – Utleie
+Forhold: En sykkel kan leies mange ganger over tid, men hver utleie gjelder nøyaktig én sykkel.
+Kardinalitet: 1–til–mange (Sykkel 1 → * Utleie)
+Stasjon – Utleie (start)
+Forhold: En utleie starter ved én stasjon, og en stasjon kan være start for mange utleier.
+Kardinalitet: 1–til–mange (Stasjon 1 → * Utleie)
+Stasjon – Utleie (slutt)
+Forhold: En utleie avsluttes ved én stasjon (når innlevert), og en stasjon kan være slutt for mange utleier. Under aktiv utleie er sluttstasjon ukjent/NULL.
+Kardinalitet: 1–til–mange (Stasjon 1 → * Utleie), med NULL mulig i utleie mens utleien er aktiv.
+
+Det finnes ingen nødvendig “ren” mange-til-mange-relasjon i denne modellen som må løses opp med koblingstabell. For eksempel kan “kunde leier sykkel” se ut som M–M over tid, men dette er nettopp det utleie-entiteten modellerer (assosiativ entitet med egne attributter som tidsstempler og beløp). Dermed er M–M allerede “løst opp” ved utleie.
 
 **Fremmednøkler:**
 
