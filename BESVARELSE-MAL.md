@@ -668,27 +668,55 @@ Estimert lagringsbehov første driftsår: ca. 40–45 MB (avrundet).
 
 **Problem 1: Redundans**
 
-[Skriv ditt svar her - gi konkrete eksempler fra CSV-filen som viser redundans]
+I CSV-filen gjentas samme informasjon flere ganger.
+Eksempel:
+Samme kunde (samme navn, mobilnummer og epost) forekommer i flere rader dersom kunden har flere utleier.
+Samme sykkel-ID gjentas hver gang den blir leid.
+Samme stasjonsnavn og adresse gjentas for hver utleie som starter eller slutter på den stasjonen.
+Dette fører til unødvendig duplisering av data. For eksempel kan én kunde som leier 10 ganger føre til at navn og kontaktinformasjon lagres 10 ganger i filen.
 
 **Problem 2: Inkonsistens**
 
-[Skriv ditt svar her - forklar hvordan redundans kan føre til inkonsistens med eksempler]
+Redundans kan føre til inkonsistens dersom én verdi oppdateres, men ikke alle forekomster.
+Eksempel:
+Hvis en kunde endrer mobilnummer, må alle rader som inneholder denne kunden oppdateres.
+Hvis én rad oppdateres feil (f.eks. skrivefeil i navn), kan samme kunde plutselig fremstå med to ulike navn i datasettet.
+Hvis stasjonsnavnet endres, må alle rader som refererer til den stasjonen oppdateres manuelt.
+Dette kan føre til at databasen inneholder motstridende informasjon.
 
 **Problem 3: Oppdateringsanomalier**
 
-[Skriv ditt svar her - diskuter slette-, innsettings- og oppdateringsanomalier]
+Oppdateringsanomali:
+Endring av én verdi krever endring i mange rader (f.eks. kundens epost).
+Innsettingsanomali:
+Man kan ikke registrere en ny kunde uten at kunden også har en utleie, siden CSV-filen kun inneholder utleier.
+Sletteanomali:
+Hvis man sletter siste utleie for en kunde, mister man samtidig all informasjon om kunden.
+I en relasjonsdatabase er disse problemene løst ved å splitte data i separate tabeller (kunde, sykkel, stasjon, utleie).
 
 **Fordeler med en indeks:**
 
-[Skriv ditt svar her - forklar hvorfor en indeks ville gjort spørringen mer effektiv]
+Uten indeks må databasen gjøre en sekvensiell gjennomgang (full table scan) for å finne alle utleier for en bestemt sykkel. Det betyr at alle rader må leses.
+Med en indeks på sykkel_id kan databasen:
+Gå direkte til relevante rader
+Unngå å lese hele tabellen
+Dette reduserer søketiden betydelig, spesielt når tabellen inneholder mange tusen eller millioner rader.
 
 **Case 1: Indeks passer i RAM**
 
-[Skriv ditt svar her - forklar hvordan indeksen fungerer når den passer i minnet]
+Hvis indeksen er liten nok til å ligge i minnet:
+DBMS kan slå opp i indeksen svært raskt (O(log n) i et B+-tre).
+Disk-aksess unngås i stor grad.
+Spørringen blir svært effektiv.
+Resultatet er nesten umiddelbar respons.
 
 **Case 2: Indeks passer ikke i RAM**
 
-[Skriv ditt svar her - forklar hvordan flettesortering kan brukes]
+Hvis indeksen er større enn tilgjengelig minne:
+Deler av indeksen må leses fra disk.
+DBMS bruker blokkvis lesing og buffer-cache.
+Ved store sorteringer kan ekstern flettesortering (external merge sort) brukes, der data deles i mindre biter som sorteres og flettes.
+Dette er tregere enn når alt ligger i RAM, men fortsatt langt mer effektivt enn full tabellskanning.
 
 **Datastrukturer i DBMS:**
 
@@ -744,25 +772,54 @@ I en LSM-tree håndteres lesing gjennom sammenslåing (merge) av flere nivåer, 
 
 **Hvor bør validering gjøres:**
 
-[Skriv ditt svar her - argumenter for validering i ett eller flere lag]
+Validering bør gjøres i flere lag, altså både i nettleseren (frontend), i applikasjonslaget (backend) og i databasen. Hvert lag har ulike formål, og sammen gir de bedre sikkerhet, brukervennlighet og dataintegritet.
 
 **Validering i nettleseren:**
 
-[Skriv ditt svar her - diskuter fordeler og ulemper]
+Fordeler:
+Gir rask tilbakemelding til brukeren (f.eks. feil epostformat).
+Forbedrer brukeropplevelsen.
+Reduserer unødvendige forespørsler til serveren.
+
+Ulemper:
+Kan omgås (f.eks. ved å deaktivere JavaScript eller sende forespørsler direkte til API-et).
+Kan ikke stoles på for sikkerhet.
+
+Nettleservalidering er derfor nyttig for brukervennlighet, men ikke tilstrekkelig alene.
 
 **Validering i applikasjonslaget:**
 
-[Skriv ditt svar her - diskuter fordeler og ulemper]
+Fordeler:
+Kontrollerer all input før den sendes til databasen.
+Kan håndtere forretningsregler (f.eks. at epost må være unik).
+Beskytter mot ondsinnet input (f.eks. SQL-injection).
+
+Ulemper:
+Krever mer kode og vedlikehold.
+Hvis databasen brukes av flere applikasjoner, må validering implementeres flere steder.
+
+Applikasjonslaget er viktig for sikkerhet og forretningslogikk.
 
 **Validering i databasen:**
 
-[Skriv ditt svar her - diskuter fordeler og ulemper]
+Fordeler:
+Sikrer dataintegritet uansett hvor data kommer fra.
+Constraints (CHECK, UNIQUE, NOT NULL, FOREIGN KEY) kan ikke omgås.
+Hindrer inkonsistente eller ugyldige data.
+
+Ulemper:
+Feilmeldinger kan være mindre brukervennlige.
+Mindre fleksibel enn applikasjonslogikk for komplekse regler.
+
+Databasen er siste forsvarslinje for å sikre korrekt data.
 
 **Konklusjon:**
 
-[Skriv ditt svar her - oppsummer hvor validering bør gjøres og hvorfor]
-
----
+Validering bør gjøres i alle tre lag:
+Nettleser → for god brukeropplevelse.
+Applikasjonslag → for sikkerhet og forretningsregler.
+Database → for å garantere dataintegritet.
+Databasen bør alltid ha grunnleggende constraints, siden dette er den eneste komponenten som ikke kan omgås. Samtidig gir frontend og backend bedre kontroll og brukervennlighet.
 
 ### Oppgave 4.5: Refleksjon over læringsutbytte
 
