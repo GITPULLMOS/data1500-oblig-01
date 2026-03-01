@@ -1,10 +1,10 @@
 # Besvarelse - Refleksjon og Analyse
 
-**Student:** [Ditt navn]
+**Student:** Mohammed Omran Sharifi
 
-**Studentnummer:** [Ditt studentnummer]
+**Studentnummer:** mosha1930
 
-**Dato:** [Innleveringsdato]
+**Dato:** 01.03.26
 
 ---
 
@@ -14,13 +14,22 @@
 
 **Identifiserte entiteter:**
 
-[Skriv ditt svar her - list opp alle entitetene du har identifisert]
+Kunde, Stasjon, Lås, Sykkel, Utleie og Betaling.
 
 **Attributter for hver entitet:**
 
-[Skriv ditt svar her - list opp attributtene for hver entitet]
+Kunde:
+Formål: Systemet må identifisere hvem som leier sykler, og kunne kontakte kunden via mobil/epost.
 
----
+Attributter:
+
+kunde_id (PK) 
+mobilnummer 
+epost 
+fornavn
+etternavn
+
+Begrunnelse: Case sier eksplisitt at kunder registreres med mobilnummer, epost, fornavn og etternavn. En intern nøkkel (kunde_id) til gjør det lett å refere til kunde selv om kontaktinfo endres.
 
 ### Oppgave 1.2: Datatyper og `CHECK`-constraints
 
