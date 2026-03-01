@@ -825,23 +825,35 @@ Databasen bør alltid ha grunnleggende constraints, siden dette er den eneste ko
 
 **Hva har du lært så langt i emnet:**
 
-[Skriv din refleksjon her - diskuter sentrale konsepter du har lært]
+Så langt i emnet har jeg lært grunnleggende og sentrale konsepter innen databaser, spesielt forskjellen mellom flat fil og relasjonsdatabase, normalisering (1NF, 2NF, 3NF), primær- og fremmednøkler, samt hvordan man sikrer dataintegritet med constraints som NOT NULL, UNIQUE, CHECK og FOREIGN KEY. Jeg har også lært hvordan indekser fungerer, spesielt B+-trær, og hvorfor de er viktige for ytelse. I tillegg har jeg fått bedre forståelse for tilgangskontroll med roller og rettigheter, og hvordan man kan bruke VIEW og Row-Level Security for å begrense tilgang til data. Praktisk arbeid med PostgreSQL og Docker har også gitt meg erfaring med hvordan databaser faktisk settes opp og brukes i praksis.
 
 **Hvordan har denne oppgaven bidratt til å oppnå læringsmålene:**
 
-[Skriv din refleksjon her - koble oppgaven til læringsmålene i emnet]
+Denne oppgaven har vært spesielt nyttig fordi den tok meg gjennom hele prosessen fra datamodellering til implementering og analyse.
+Jeg måtte:
+Identifisere entiteter og relasjoner fra en tekstlig beskrivelse.
+Lage ER-diagram.
+Velge riktige datatyper og constraints.
+Implementere databasen i SQL.
+Sette opp tilgangskontroll.
+Reflektere over ytelse og lagringskapasitet.
+Dette har gjort at jeg ikke bare forstår teorien, men også hvordan den brukes i praksis. Oppgaven har derfor bidratt til å oppnå læringsmål knyttet til databasedesign, normalisering, SQL, sikkerhet og analyse av databasesystemer.
 
 Se oversikt over læringsmålene i en PDF-fil i Canvas https://oslomet.instructure.com/courses/33293/files/folder/Plan%20v%C3%A5ren%202026?preview=4370886
 
 **Hva var mest utfordrende:**
 
-[Skriv din refleksjon her - diskuter hvilke deler av oppgaven som var mest krevende]
+Det mest utfordrende var å designe datamodellen riktig fra starten av, spesielt å tenke gjennom relasjoner og normalisering slik at man unngår redundans og oppdateringsanomalier. Det var også krevende å estimere lagringskapasitet og forstå hvordan indekser påvirker ytelse og diskbruk. I tillegg var det en utfordring å sette opp Docker og forstå hvordan init-scripts kjøres automatisk.
 
 **Hva har du lært om databasedesign:**
 
-[Skriv din refleksjon her - reflekter over prosessen med å designe en database fra bunnen av]
-
----
+Jeg har lært at databasedesign handler om mer enn bare å lage tabeller – det handler om å strukturere data på en måte som:
+Reduserer redundans
+Forhindrer inkonsistens
+Sikrer dataintegritet
+Gir god ytelse
+Er skalerbar over tid
+Prosessen med å designe databasen fra bunnen av har vist hvor viktig det er å planlegge før man implementerer. Små designvalg (f.eks. bruk av surrogatnøkler eller hvordan man modellerer relasjoner) kan få store konsekvenser senere. Konkludert så har denne oppgaven gitt meg en helhetlig forståelse av hvordan teori og praksis henger sammen i databasesystemer.
 
 ## Del 5: SQL-spørringer og Automatisk Testing
 
