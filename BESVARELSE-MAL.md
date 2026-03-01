@@ -444,13 +444,33 @@ Dermed er modellen i 2NF.
 
 **Vurdering av 3. normalform (3NF):**
 
-[Skriv ditt svar her - forklar om datamodellen din tilfredsstiller 3NF og hvorfor]
+Datamodellen tilfredsstiller 3NF fordi:
 
-**Eventuelle justeringer:**
+3NF krever at tabeller er i 2NF, og at det ikke finnes transitive avhengigheter: ingen ikke-nøkkelattributt skal være avhengig av en annen ikke-nøkkelattributt (kun av primærnøkkelen).
 
-[Skriv ditt svar her - hvis modellen ikke var på 3NF, forklar hvilke justeringer du har gjort]
+I hver tabell beskriver attributtene kun egenskaper ved “tingen” tabellen representerer:
 
----
+kunde: mobilnummer, epost, fornavn, etternavn beskriver kunden og er avhengige av kunde_id. Det er ingen kolonne som kan utledes av en annen i samme tabell (vi lagrer f.eks. ikke fullt navn i tillegg).
+
+stasjon: navn, adresse, breddegrad, lengdegrad beskriver stasjonen og er avhengige av stasjon_id. Ingen av disse er avhengig av hverandre som en transitive avhengighet.
+
+lås: stasjon_id, låsnr, aktiv beskriver låsen og er avhengige av lås_id.
+
+stasjon_id er en FK, men det skaper ikke brudd på 3NF; det refererer bare til en annen entitet.
+
+låsnr er en egenskap ved låsen (og typisk unik per stasjon via constraint), men den ligger korrekt i lås-tabellen.
+
+sykkel: stasjon_id, lås_id, aktiv, modell beskriver sykkelen og er avhengige av sykkel_id.
+
+Lokasjon er modellert via FK-er (eller NULL når utleid). Det lagres ikke redundant informasjon som både stasjonnavn og stasjon_id i sykkel, som ellers kunne gitt transitive avhengigheter.
+
+utleie: kunde_id, sykkel_id, utlevert_tid, innlevert_tid, start_stasjon_id, slutt_stasjon_id, leiebeløp er alle egenskaper ved en utleiehendelse og avhenger av utleie_id.
+
+Vi lagrer ikke kundeinfo (mobil/epost) i utleie, kun kunde_id. Dermed unngås redundans og transitive avhengigheter.
+
+Vi lagrer heller ikke stasjonsnavn/adresse i utleie, kun stasjon_id-er.
+
+En mulig fallgruve kunne vært dersom vi lagret både stasjon_id og stasjon_navn i samme tabell (som da kunne vært transitivt avhengig), men det gjør vi ikke. Derfor er modellen i 3NF.
 
 ## Del 2: Database-implementering
 
