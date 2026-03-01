@@ -35,15 +35,54 @@ CREATE TABLE kunde (
   CONSTRAINT uq_kunde_epost UNIQUE (epost)
 );
 
+CREATE TABLE stasjon (
+  stasjon_id  BIGSERIAL PRIMARY KEY,
+  navn        TEXT NOT NULL,
+  adresse     TEXT NOT NULL,
+  breddegrad  NUMERIC(9,6),
+  lengdegrad  NUMERIC(9,6),
 
+  CONSTRAINT chk_stasjon_navn
+    CHECK (length(trim(navn)) > 0),
 
--- Sett inn testdata
+  CONSTRAINT chk_stasjon_adresse
+    CHECK (length(trim(adresse)) > 0),
 
+  CONSTRAINT chk_stasjon_breddegrad
+    CHECK (breddegrad IS NULL OR breddegrad BETWEEN -90 AND 90),
 
+  CONSTRAINT chk_stasjon_lengdegrad
+    CHECK (lengdegrad IS NULL OR lengdegrad BETWEEN -180 AND 180)
+);
 
--- DBA setninger (rolle: kunde, bruker: kunde_1)
+CREATE TABLE laas (
+  laas_id    BIGSERIAL PRIMARY KEY,
+  stasjon_id BIGINT NOT NULL REFERENCES stasjon(stasjon_id) ON DELETE CASCADE,
+  laasnr     INTEGER NOT NULL,
+  aktiv      BOOLEAN NOT NULL DEFAULT TRUE,
 
+  CONSTRAINT chk_laasnr_pos CHECK (laasnr > 0),
+  CONSTRAINT uq_laas_per_stasjon UNIQUE (stasjon_id, laasnr)
+);
 
+CREATE TABLE sykkel (
+  sykkel_id  BIGSERIAL PRIMARY KEY,
+  stasjon_id BIGINT NULL REFERENCES stasjon(stasjon_id),
+  laas_id    BIGINT NULL REFERENCES laas(laas_id),
+  aktiv      BOOLEAN NOT NULL DEFAULT TRUE,
+  modell     TEXT NULL,
+
+  -- Enten utleid (begge NULL) eller parkert (begge NOT NULL)
+  CONSTRAINT chk_sykkel_plassering
+    CHECK (
+      (stasjon_id IS NULL AND laas_id IS NULL)
+      OR
+      (stasjon_id IS NOT NULL AND laas_id IS NOT NULL)
+    ),
+
+  CONSTRAINT chk_sykkel_modell
+    CHECK (modell IS NULL OR length(trim(modell)) > 0)
+);
 
 -- Eventuelt: Opprett indekser for ytelse
 
