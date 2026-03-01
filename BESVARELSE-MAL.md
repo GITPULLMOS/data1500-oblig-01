@@ -572,15 +572,17 @@ GRANT SELECT ON TABLES TO kunde;
 
 **SQL for VIEW:**
 
-```sql
-[Skriv din SQL-kode for VIEW her]
-```
+CREATE VIEW mine_utleier AS
+SELECT u.*
+FROM utleie u
+JOIN kunde k ON u.kunde_id = k.kunde_id
+WHERE k.epost = current_user;
+
+GRANT SELECT ON mine_utleier TO kunde;
 
 **Ulempe med VIEW vs. POLICIES:**
 
-[Skriv ditt svar her - diskuter minst én ulempe med å bruke VIEW for autorisasjon sammenlignet med POLICIES]
-
----
+En ulempe med VIEW er at sikkerheten ikke håndheves direkte på tabellen. Hvis en bruker får direkte tilgang til tabellen, kan view-et omgås. Med POLICY (Row-Level Security) håndheves tilgangen på radnivå i selve tabellen, noe som gir sterkere og mer robust sikkerhet.
 
 ## Del 4: Analyse og Refleksjon
 
