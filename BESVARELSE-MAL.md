@@ -169,7 +169,25 @@ Sykkel: konsistens mellom stasjon og lås
 CHECK ( (stasjon_id IS NULL AND lås_id IS NULL) OR (stasjon_id IS NOT NULL AND lås_id IS NOT NULL) )
 Begrunnelse: Følger hintet: en utleid sykkel modelleres ved at den ikke har registrert stasjon og lås (begge NULL). Hvis sykkelen er parkert, må både stasjon og lås være satt (ikke “halv-plassering”).
 
-[Legg inn mermaid-kode eller eventuelt en bildefil fra `mermaid.live` her]
+Sykkel: modell hvis satt må være ikke-tom
+
+CHECK (modell IS NULL OR length(trim(modell)) > 0)
+Begrunnelse: Valgfritt felt, men skal ikke kunne være tom streng.
+
+Utleie: innlevering kan ikke være før utlevering
+
+CHECK (innlevert_tid IS NULL OR innlevert_tid >= utlevert_tid)
+Begrunnelse: Sikrer tidsrekkefølge i leieperioden.
+
+Utleie: konsistens mellom innlevert_tid og slutt_stasjon_id
+
+CHECK ( (innlevert_tid IS NULL AND slutt_stasjon_id IS NULL) OR (innlevert_tid IS NOT NULL AND slutt_stasjon_id IS NOT NULL) )
+Begrunnelse: Når utleien er aktiv (ingen innleveringstid), skal det heller ikke finnes sluttstasjon. Når den er avsluttet, må både innleveringstid og sluttstasjon være registrert.
+
+Utleie: ikke-negativt leiebeløp
+
+CHECK (leiebeløp >= 0)
+Begrunnelse: Hindrer negative beløp. 0 kan være gyldig ved gratisleie/kampanje.
 
 ---
 
