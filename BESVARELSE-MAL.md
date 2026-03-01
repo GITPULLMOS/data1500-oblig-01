@@ -542,22 +542,30 @@ ORDER BY table_name;
 
 **SQL for å opprette rolle:**
 
-```sql
-[Skriv din SQL-kode for å opprette rollen 'kunde' her]
-```
+CREATE ROLE kunde;
+
+REVOKE ALL ON SCHEMA public FROM kunde;
 
 **SQL for å opprette bruker:**
 
-```sql
-[Skriv din SQL-kode for å opprette brukeren 'kunde_1' her]
-```
+CREATE USER kunde_1 WITH PASSWORD 'kunde123';
+
+GRANT kunde TO kunde_1;
 
 **SQL for å tildele rettigheter:**
 
-```sql
-[Skriv din SQL-kode for å tildele rettigheter til rollen her]
-```
+GRANT USAGE ON SCHEMA public TO kunde;
 
+GRANT SELECT ON TABLE
+    kunde,
+    stasjon,
+    laas,
+    sykkel,
+    utleie
+TO kunde;
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+GRANT SELECT ON TABLES TO kunde;
 ---
 
 ### Oppgave 3.2: Begrenset visning for kunder
