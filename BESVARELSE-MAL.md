@@ -87,7 +87,47 @@ Begrunnelse: Caset sier at utleietidspunkt og innleveringstidspunkt skal registr
 
 **Valgte datatyper og begrunnelser:**
 
-[Skriv ditt svar her - forklar hvilke datatyper du har valgt for hver attributt og hvorfor]
+Kunde
+
+kunde_id: BIGSERIAL – autoinkrementerende primærnøkkel som skalerer godt.
+mobilnummer: TEXT – lagres som tekst for å bevare ledende nuller og fordi det ikke skal brukes i regning.
+epost: TEXT – epost er tekstlig identifikator og lagres best som tekst.
+fornavn: TEXT – navn er tekst.
+etternavn: TEXT – navn er tekst.
+
+Stasjon
+
+stasjon_id: BIGSERIAL – autoinkrementerende primærnøkkel.
+navn: TEXT – stasjonsnavn er tekst.
+adresse: TEXT – adresse/område er tekst.
+breddegrad: NUMERIC(9,6) – koordinater krever desimalpresisjon; numeric gir kontrollert presisjon.
+lengdegrad: NUMERIC(9,6) – som over.
+
+Lås
+
+lås_id: BIGSERIAL – autoinkrementerende primærnøkkel.
+stasjon_id: BIGINT – fremmednøkkel som peker til stasjon(stasjon_id) (samme “familie” som BIGSERIAL).
+låsnr: INTEGER – fysisk nummer på lås er et heltall.
+aktiv: BOOLEAN – naturlig ja/nei-verdi for om låsen er i drift.
+
+Sykkel
+
+sykkel_id: BIGSERIAL – unik sykkel-ID, autoinkrementerende.
+stasjon_id: BIGINT – fremmednøkkel til stasjon, men kan være NULL når sykkelen er utleid (hint i oppgaven).
+lås_id: BIGINT – fremmednøkkel til lås, men kan være NULL når sykkelen er utleid.
+aktiv: BOOLEAN – om sykkelen er i drift.
+modell: TEXT – beskrivende tekst (valgfri).
+
+Utleie
+
+utleie_id: BIGSERIAL – autoinkrementerende primærnøkkel.
+kunde_id: BIGINT – fremmednøkkel til kunde(kunde_id).
+sykkel_id: BIGINT – fremmednøkkel til sykkel(sykkel_id).
+utlevert_tid: TIMESTAMPTZ – tidspunkt for utlevering med tidssone.
+innlevert_tid: TIMESTAMPTZ – tidspunkt for innlevering med tidssone, kan være NULL ved aktiv utleie.
+start_stasjon_id: BIGINT – fremmednøkkel til stasjon, hvor utleie starter.
+slutt_stasjon_id: BIGINT – fremmednøkkel til stasjon, hvor utleie slutter, kan være NULL ved aktiv utleie.
+leiebeløp: NUMERIC(10,2) – valuta bør lagres som numeric (ikke flyttall) for å unngå avrundingsfeil; 2 desimaler er standard.
 
 **`CHECK`-constraints:**
 
