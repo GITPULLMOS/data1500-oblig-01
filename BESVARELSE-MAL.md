@@ -596,15 +596,69 @@ En ulempe med VIEW er at sikkerheten ikke håndheves direkte på tabellen. Hvis 
 
 **Totalt antall utleier per år:**
 
-[Skriv din utregning her]
+Totalt antall utleier per år:
+Høysesong (mai–september) = 5 måneder × 20 000 = 100 000
+Mellomsesong (mars, april, oktober, november) = 4 måneder × 5 000 = 20 000
+Lavsesong (desember–februar) = 3 måneder × 500 = 1 500
+Totalt per år:
+100000+20000+1500=121500 utleier
 
 **Estimat for lagringskapasitet:**
 
-[Skriv din utregning her - vis hvordan du har beregnet lagringskapasiteten for hver tabell]
+Jeg estimerer lagringsbehovet hovedsakelig fra tabellen utleie, siden den vokser med utleieraten. De andre tabellene (kunde, sykkel, stasjon, laas) endrer seg lite sammenlignet med antall utleier.
+
+utleie (121 500 rader)
+
+Attributter i utleie (fra modellen min):
+utleie_id (BIGINT) ≈ 8 B
+kunde_id (BIGINT) ≈ 8 B
+sykkel_id (BIGINT) ≈ 8 B
+utlevert_tid (TIMESTAMPTZ) ≈ 8 B
+innlevert_tid (TIMESTAMPTZ) ≈ 8 B
+start_stasjon_id (BIGINT) ≈ 8 B
+slutt_stasjon_id (BIGINT) ≈ 8 B
+leiebelop (NUMERIC(10,2)) ≈ 8 B (praktisk grov-estimat)
+
+Sum “rå data”:
+8×7+8=64 bytes
+
+I PostgreSQL kommer også rad-overhead (tuple header, alignment, null-bitmap osv.). Et vanlig grovt anslag er ~30–40 bytes ekstra per rad.
+Jeg runder derfor per rad til ca:
+64+32≈96 bytes per rad
+
+Tabellstørrelse:
+121500×96≈11664000 bytes≈11.7 MB
+
+Indekser på utleie (grovt anslag)
+
+Typisk har vi minst:
+PK-indeks på utleie_id
+indekser på FK-kolonner (ofte anbefalt for ytelse): kunde_id, sykkel_id, start_stasjon_id, slutt_stasjon_id
+Antall indekser (grovt): 5.
+Et enkelt grovt anslag for en B-tree indeksoppføring er ca ~32 bytes per rad per indeks.
+
+Størrelse per indeks:
+121500×32≈3888000 bytes≈3.9 MB
+
+5 indekser:
+5×3.9≈19.5 MB
+
+stasjon, laas, sykkel, kunde vil i første driftsår normalt være små sammenlignet med utleie. Selv med noen tusen kunder er de fortsatt langt mindre enn utleietabellen + indeksene. Jeg setter derfor et grovt tillegg på ~1–5 MB for disse tabellene og deres indekser i et konservativt estimat.
+
+PostgreSQL bruker også plass til bl.a. free space map, visibility map og intern overhead. Et vanlig grovt påslag er ~20–30%.
 
 **Totalt for første år:**
 
-[Skriv ditt estimat her]
+Tabell utleie + indekser:
+11.7 MB+19.5 MB=31.2 MB
+
+Legg til øvrige tabeller (grovt): ~3 MB:
+31.2+3≈34.2 MB
+
+Påslag 25% overhead:
+34.2×1.25≈42.75 MB
+
+Estimert lagringsbehov første driftsår: ca. 40–45 MB (avrundet).
 
 ---
 
