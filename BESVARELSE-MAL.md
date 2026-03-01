@@ -859,13 +859,11 @@ Prosessen med å designe databasen fra bunnen av har vist hvor viktig det er å 
 
 **Plassering av SQL-spørringer:**
 
-[Bekreft at du har lagt SQL-spørringene i `test-scripts/queries.sql`]
-
+jeg bekrefter å ha plassert sql spørringene i queries.sql
 
 **Eventuelle feil og rettelser:**
 
-[Skriv ditt svar her - hvis noen tester feilet, forklar hva som var feil og hvordan du rettet det]
-
+Under testing måtte datoen i oppgave 5.3 justeres til å samsvare med testdataene som ble generert i 01-init-database.sql. Testdataene bruker now() - interval '40 days', så datoen ble satt til 1. januar 2026 for å sikre at spørringen returnerer relevante rader. Ellers fungerte alle spørringene uten feil etter at riktige JOIN-typer (LEFT JOIN) ble brukt for å inkludere kunder og sykler uten utleier.
 ---
 
 ## Del 6: Bonusoppgaver (Valgfri)
