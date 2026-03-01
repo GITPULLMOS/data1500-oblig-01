@@ -420,7 +420,15 @@ erDiagram
 
 **Vurdering av 1. normalform (1NF):**
 
-[Skriv ditt svar her - forklar om datamodellen din tilfredsstiller 1NF og hvorfor]
+Datamodellen tilfredsstiller 1NF fordi:
+
+Alle tabeller har atomiske attributter (én verdi per kolonne per rad). For eksempel lagres mobilnummer som ett felt, epost som ett felt, og koordinater som separate verdier (breddegrad, lengdegrad).
+
+Det finnes ingen repeterende grupper eller “listekolonner” (f.eks. flere mobilnumre i samme felt).
+
+Hver tabell har en primærnøkkel som identifiserer rader entydig (kunde_id, stasjon_id, lås_id, sykkel_id, utleie_id).
+
+Derfor er modellen i 1NF.
 
 **Vurdering av 2. normalform (2NF):**
 
