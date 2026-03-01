@@ -84,7 +84,34 @@ CREATE TABLE sykkel (
     CHECK (modell IS NULL OR length(trim(modell)) > 0)
 );
 
--- Eventuelt: Opprett indekser for ytelse
+-- 1 lås kan ha maks 1 sykkel samtidig (for ikke-null laas_id)
+CREATE UNIQUE INDEX uq_sykkel_laas_notnull
+  ON sykkel(laas_id)
+  WHERE laas_id IS NOT NULL;
+
+CREATE TABLE utleie (
+  utleie_id        BIGSERIAL PRIMARY KEY,
+  kunde_id         BIGINT NOT NULL REFERENCES kunde(kunde_id),
+  sykkel_id        BIGINT NOT NULL REFERENCES sykkel(sykkel_id),
+  utlevert_tid     TIMESTAMPTZ NOT NULL,
+  innlevert_tid    TIMESTAMPTZ NULL,
+  start_stasjon_id BIGINT NOT NULL REFERENCES stasjon(stasjon_id),
+  slutt_stasjon_id BIGINT NULL REFERENCES stasjon(stasjon_id),
+  leiebelop        NUMERIC(10,2) NOT NULL,
+
+  CONSTRAINT chk_utleie_tid
+    CHECK (innlevert_tid IS NULL OR innlevert_tid >= utlevert_tid),
+
+  CONSTRAINT chk_utleie_sluttinfo
+    CHECK (
+      (innlevert_tid IS NULL AND slutt_stasjon_id IS NULL)
+      OR
+      (innlevert_tid IS NOT NULL AND slutt_stasjon_id IS NOT NULL)
+    ),
+
+  CONSTRAINT chk_utleie_belop
+    CHECK (leiebelop >= 0)
+);
 
 
 
