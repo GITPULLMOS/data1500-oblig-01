@@ -280,8 +280,56 @@ Disse er gode kandidater for UNIQUE, men jeg bruker fortsatt surrogat-PK for enk
 
 **Oppdatert ER-diagram:**
 
-[Legg inn mermaid-kode eller eventuelt en bildefil fra `mermaid.live` her]
+erDiagram
+    KUNDE {
+        BIGSERIAL kunde_id PK
+        TEXT mobilnummer
+        TEXT epost
+        TEXT fornavn
+        TEXT etternavn
+    }
 
+    STASJON {
+        BIGSERIAL stasjon_id PK
+        TEXT navn
+        TEXT adresse
+        NUMERIC(9,6) breddegrad
+        NUMERIC(9,6) lengdegrad
+    }
+
+    LAAS {
+        BIGSERIAL laas_id PK
+        BIGINT stasjon_id FK
+        INTEGER laasnr
+        BOOLEAN aktiv
+    }
+
+    SYKKEL {
+        BIGSERIAL sykkel_id PK
+        BIGINT stasjon_id FK  "NULL når utleid"
+        BIGINT laas_id FK     "NULL når utleid"
+        BOOLEAN aktiv
+        TEXT modell
+    }
+
+    UTLEIE {
+        BIGSERIAL utleie_id PK
+        BIGINT kunde_id FK
+        BIGINT sykkel_id FK
+        TIMESTAMPTZ utlevert_tid
+        TIMESTAMPTZ innlevert_tid "NULL når aktiv"
+        BIGINT start_stasjon_id FK
+        BIGINT slutt_stasjon_id FK "NULL når aktiv"
+        NUMERIC(10,2) leiebelop
+    }
+
+    STASJON ||--o{ LAAS : "har"
+    STASJON ||--o{ SYKKEL : "har (når parkert)"
+    LAAS ||--o{ SYKKEL : "holder (når parkert)"
+    KUNDE ||--o{ UTLEIE : "gjør"
+    SYKKEL ||--o{ UTLEIE : "brukes i"
+    STASJON ||--o{ UTLEIE : "start"
+    STASJON ||--o{ UTLEIE : "slutt"
 ---
 
 ### Oppgave 1.4: Forhold og fremmednøkler
