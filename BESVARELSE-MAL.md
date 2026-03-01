@@ -692,9 +692,16 @@ Estimert lagringsbehov første driftsår: ca. 40–45 MB (avrundet).
 
 **Datastrukturer i DBMS:**
 
-[Skriv ditt svar her - diskuter B+-tre og hash-indekser]
-
----
+B+-tre:
+Standard indeksstruktur i PostgreSQL.
+Effektiv for både likhets- og intervallsøk.
+Gir O(log n) oppslagstid.
+Bevarer sortert rekkefølge.
+Hash-indeks:
+Optimal for likhetsoppslag (=).
+Ikke egnet for intervallsøk.
+Kan være rask for spesifikke brukstilfeller.
+PostgreSQL bruker som standard B+-tre fordi de er fleksible og fungerer godt for de fleste spørringer.
 
 ### Oppgave 4.3: Datastrukturer for logging
 
