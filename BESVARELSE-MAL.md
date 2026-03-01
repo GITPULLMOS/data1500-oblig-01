@@ -432,7 +432,15 @@ Derfor er modellen i 1NF.
 
 **Vurdering av 2. normalform (2NF):**
 
-[Skriv ditt svar her - forklar om datamodellen din tilfredsstiller 2NF og hvorfor]
+Datamodellen tilfredsstiller 2NF fordi:
+
+2NF gjelder spesielt når man har sammensatte primærnøkler, og man må sikre at ingen ikke-nøkkelattributter er delvis avhengige av bare en del av nøkkelen.
+
+I denne modellen bruker jeg surrogatnøkler (enkeltkolonne-PK) for alle tabeller. Det betyr at alle ikke-nøkkelattributter i en tabell er avhengige av hele primærnøkkelen (fordi PK er én kolonne).
+
+Eksempel: I utleie er attributter som utlevert_tid, innlevert_tid, leiebeløp avhengige av utleie_id (hele nøkkelen), ikke av en del av en sammensatt nøkkel.
+
+Dermed er modellen i 2NF.
 
 **Vurdering av 3. normalform (3NF):**
 
