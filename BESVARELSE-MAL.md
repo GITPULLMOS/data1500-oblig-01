@@ -131,9 +131,43 @@ leiebeløp: NUMERIC(10,2) – valuta bør lagres som numeric (ikke flyttall) for
 
 **`CHECK`-constraints:**
 
-[Skriv ditt svar her - list opp alle CHECK-constraints du har lagt til og forklar hvorfor de er nødvendige]
+Kunde: mobilnummerformat
 
-**ER-diagram:**
+CHECK (mobilnummer ~ '^[0-9]{8,15}$')
+Begrunnelse: Sikrer at mobilnummer kun inneholder sifre og har en rimelig lengde (8–15). Tekstformat gjør at ledende nuller beholdes.
+
+Kunde: epostformat
+
+CHECK (epost ~* '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$')
+Begrunnelse: Enkel validering som fanger vanlige epost-feil (mangler @, domene osv.). ~* gjør sjekken case-insensitiv.
+
+Kunde: ikke-tomme navn
+
+CHECK (length(trim(fornavn)) > 0)
+CHECK (length(trim(etternavn)) > 0)
+Begrunnelse: Hindrer at navn lagres som tom streng eller kun mellomrom.
+
+Stasjon: ikke-tomme felt
+
+CHECK (length(trim(navn)) > 0)
+CHECK (length(trim(adresse)) > 0)
+Begrunnelse: Stasjon må ha navn og en form for stedsbeskrivelse.
+
+Stasjon: gyldige koordinater
+
+CHECK (breddegrad BETWEEN -90 AND 90)
+CHECK (lengdegrad BETWEEN -180 AND 180)
+Begrunnelse: Sikrer at koordinater er innenfor gyldige geografiske intervaller.
+
+Lås: positivt låsnummer
+
+CHECK (låsnr > 0)
+Begrunnelse: Fysisk nummerering bør være positive heltall.
+
+Sykkel: konsistens mellom stasjon og lås
+
+CHECK ( (stasjon_id IS NULL AND lås_id IS NULL) OR (stasjon_id IS NOT NULL AND lås_id IS NOT NULL) )
+Begrunnelse: Følger hintet: en utleid sykkel modelleres ved at den ikke har registrert stasjon og lås (begge NULL). Hvis sykkelen er parkert, må både stasjon og lås være satt (ikke “halv-plassering”).
 
 [Legg inn mermaid-kode eller eventuelt en bildefil fra `mermaid.live` her]
 
