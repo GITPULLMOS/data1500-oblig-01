@@ -262,7 +262,21 @@ Begrunnelse: Utleie-hendelser trenger en egen identifikator. En naturlig nøkkel
 
 **Naturlige vs. surrogatnøkler:**
 
-[Skriv ditt svar her - diskuter om du har brukt naturlige eller surrogatnøkler og hvorfor]
+Jeg har i hovedsak brukt surrogatnøkler (BIGSERIAL) som primærnøkler for alle entitetene. Grunnen er:
+
+Stabilitet over tid: Naturlige nøkler som mobilnummer, epost og navn kan endres, og da ville primærnøkkelen måtte endres (eller man må lage kompliserte løsninger). Surrogatnøkler endres ikke.
+
+Enklere relasjoner: Fremmednøkler blir korte og konsistente (BIGINT), og spørringer/joins blir enklere og mer effektive.
+
+Unike krav kan fortsatt håndheves: Selv om mobilnummer og epost kunne vært naturlige nøkler, er de bedre som kandidatnøkler (UNIQUE) i stedet for PK. På samme måte kan låsnr være unik per stasjon, men det håndheves best med en unik constraint (UNIQUE (stasjon_id, låsnr)) heller enn som sammensatt PK.
+
+Naturlige nøkkel-kandidater som håndheves separat:
+
+kunde.mobilnummer (unik)
+kunde.epost (unik)
+lås: kombinasjonen (stasjon_id, låsnr) kan være unik per stasjon
+
+Disse er gode kandidater for UNIQUE, men jeg bruker fortsatt surrogat-PK for enklere design.
 
 **Oppdatert ER-diagram:**
 
