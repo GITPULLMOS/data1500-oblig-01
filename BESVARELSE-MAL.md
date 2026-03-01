@@ -245,8 +245,20 @@ erDiagram
 ### Oppgave 1.3: Primærnøkler
 
 **Valgte primærnøkler og begrunnelser:**
+Kunde (kunde): kunde_id som PK
+Begrunnelse: Mobilnummer og epost kan endres over tid (nytt nummer/epost), og det er bedre å ha en stabil intern identifikator som ikke påvirkes av endringer i kontaktinformasjon.
 
-[Skriv ditt svar her - forklar hvilke primærnøkler du har valgt for hver entitet og hvorfor]
+Stasjon (stasjon): stasjon_id som PK
+Begrunnelse: Stasjonsnavn kan i prinsippet endres (f.eks. omdøping), og flere stasjoner kan ha like/tilsvarende navn. En intern ID er stabil og gjør FK-er enkle.
+
+Lås (lås): lås_id som PK
+Begrunnelse: En lås må kunne identifiseres entydig på tvers av hele systemet. Selv om låsnr kan være unik per stasjon, er det praktisk å bruke én enkel nøkkel som FK-mål fra sykkel.
+
+Sykkel (sykkel): sykkel_id som PK
+Begrunnelse: Caset sier at hver sykkel har en unik ID. Den kan fungere som en primærnøkkel direkte (implementert som en surrogatnøkkel/sekvens i databasen).
+
+Utleie (utleie): utleie_id som PK
+Begrunnelse: Utleie-hendelser trenger en egen identifikator. En naturlig nøkkel som (kunde_id, sykkel_id, utlevert_tid) kan i teorien fungere, men blir upraktisk og sårbar (tidsstempel som del av PK), og gjør referanser til utleie vanskeligere. En enkel surrogat-ID er mest robust.
 
 **Naturlige vs. surrogatnøkler:**
 
