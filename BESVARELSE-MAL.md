@@ -31,6 +31,58 @@ etternavn
 
 Begrunnelse: Case sier eksplisitt at kunder registreres med mobilnummer, epost, fornavn og etternavn. En intern nøkkel (kunde_id) til gjør det lett å refere til kunde selv om kontaktinfo endres.
 
+Stasjon:
+Formål: Systemet består av sykkelstasjoner hvor sykler kan hentes og leveres.
+
+Attributter:
+
+stasjon_id (PK)
+navn
+adresse/område
+breddegrad
+lengdegrad
+
+Begrunnelse: Systemet må holde styr på “hvilke sykler er tilgjengelige på hvilke stasjoner (sted)”. Navn og lokasjonsinfo gjør stasjonen brukbar for app/bruker. Koordinater er relevant for “sted” og typisk i bysykkel.
+
+Lås:
+Formål: Hver sykkel er låst fast med en lås ved en stasjon. En stasjon har mange låser.
+
+Attributter:
+
+lås_id (PK)
+stasjon_id (FK → Stasjon)
+låsnr
+
+Begrunnelse: Hintet sier at en stasjon har mange låser, og at sykler låses til en tilfeldig lås på en stasjon. For å vite hvor en sykkel står, må vi kunne peke på en konkret lås (ikke bare stasjonen).
+
+Sykkel:
+Formål: Hver sykkel har unik ID og er enten parkert (ved en lås på en stasjon) eller utleid.
+
+Attributter:
+
+sykkel_id (PK)
+stasjon_id (FK → Stasjon, NULL mulig)
+lås_id (FK → Lås, NULL mulig)
+modell/merke 
+
+Begrunnelse: Caset krever at systemet holder styr på hvilke sykler som er tilgjengelige på hvilke stasjoner, og hvilke som er utleid. Hintet foreslår modellering ved at en utleid sykkel har NULL for stasjon og lås.
+
+Utleie:
+Formål: Registrere selve leieforholdet: hvem som leier hvilken sykkel, når den tas ut, når den leveres inn, og hva det kostet.
+
+Attributter:
+
+utleie_id (PK)
+kunde_id (FK → Kunde)
+sykkel_id (FK → Sykkel)
+utlevert_tid (timestamp)
+innlevert_tid (timestamp, NULL mulig)
+start_stasjon_id (FK → Stasjon)
+slutt_stasjon_id (FK → Stasjon, NULL mulig)
+leiebeløp (numeric)
+
+Begrunnelse: Caset sier at utleietidspunkt og innleveringstidspunkt skal registreres, og at kunden betaler for tidsintervallet. Det er også eksplisitt at leiebeløpet skal registreres på den gjeldende utleien. NULL på innlevert_tid støtter hintet om “pågående utleie”.
+
 ### Oppgave 1.2: Datatyper og `CHECK`-constraints
 
 **Valgte datatyper og begrunnelser:**
