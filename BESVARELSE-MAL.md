@@ -520,7 +520,8 @@ Jeg har laget sql skriptet
 **Dokumentasjon av vellykket kjøring:**
 
 [Skriv ditt svar her - f.eks. skjermbilder eller output fra terminalen som viser at databasen ble opprettet uten feil]
-
+![bilde av at databasen blir opprettet](image.png)
+![Bilde av at opprettelsen av databasen var vellykket](image-1.png)
 **Spørring mot systemkatalogen:**
 
 ```sql
@@ -533,11 +534,7 @@ ORDER BY table_name;
 
 **Resultat:**
 
-```
-[Skriv resultatet av spørringen her - list opp alle tabellene som ble opprettet]
-```
-
----
+![bilde av sql spørring og resultatet](image-2.png)
 
 ## Del 3: Tilgangskontroll
 
